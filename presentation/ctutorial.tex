@@ -1,0 +1,127 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usetheme{default}
+
+\title{Interfacing C with OCaml}
+\author{Niki Yoshiuchi}
+\date{October 15, 2011}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+\begin{frame}{Overview}
+\begin{itemize}
+    \item Why?
+    \item A Quick Example
+    \begin{itemize}
+        \item C Code
+        \item OCaml Code
+        \item Compiling
+    \end{itemize}
+    \item Function signatures
+    \begin{itemize}
+        \item Arity $>$ 5
+    \end{itemize}
+    \item value type
+    \begin{itemize}
+        \item Integral types
+        \item Structured data
+        \item Custom data
+    \end{itemize}
+    \item Linking
+    \begin{itemize}
+        \item Static
+        \item Dynamic
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Why?}
+\begin{itemize}
+    \item Bindings to C libraries
+    \item Multi-core threading
+    \begin{itemize}
+        \item If the C code doesn't require the OCaml runtime we can release the lock
+    \end{itemize}
+    \item Breaking the type system
+    \begin{itemize}
+        \item If you are going to do this, it's probably better to use the Obj module
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A Quick Example: C Code}
+\begin{lstinputlisting}[language=C]{../example0/stubs.c}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile]{A Quick Example: OCaml Code}
+\begin{lstinputlisting}[language=ML]{../example0/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile]{A Quick Example: Compiling}
+\begin{lstlisting}
+gcc -I /usr/local/lib/ocaml -c stubs.c
+ocamlc -c main.ml
+ar rcs libstubs.a stubs.o
+ocamlc -o main.byte -custom libstubs.a main.cmo
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Function Signatures}
+The OCaml code is simple - declare your function using the \emph{external} keyword,
+ specify its type and set it equal to the name of the C implementation.
+\begin{itemize}
+    \item OCaml:
+    \begin{lstlisting}[language=ML]
+    external name : type = "C-function-name"
+    \end{lstlisting}
+    \item C:
+    \begin{lstlisting}[language=C]
+    CAMLprim value name(value arg1, value arg2)
+    \end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=15]{Arity $>$ 5}
+For functions with Arity n $>$ 5, we must implement two C functions - one
+with n arguments and one with an array.  The former is used for native compilation,
+the latter for byte code compilation.
+\begin{itemize}
+    \item OCaml:
+    \begin{lstlisting}[language=ML]
+    external name : type = "byte-code-name"
+        "native-code-name"
+    \end{lstlisting}
+    \item C (native):
+    \begin{lstlisting}[language=C]
+    CAMLprim value native_code(value arg1, value arg2,
+    value arg3, value arg4, value arg5, value arg6)
+    \end{lstlisting}
+    \item C (byte):
+    \begin{lstlisting}[language=C]
+    CAMLprim value byte_code(value *argv, int argc) {
+        native_code(argv[0], argv[1], argv[2],
+        argv[3], argv[4], argv[5]);
+    }
+    \end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{value type}
+All variables passed between OCaml and C are of type \emph{value}.  A \emph{value} can be:
+\begin{itemize}
+    \item A integral type
+    \item A heap allocated object
+    \item An object allocated outside of the heap
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{integral types}
+\end{frame}
+
+\end{document}
