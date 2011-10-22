@@ -28,8 +28,8 @@
     \item value type
     \begin{itemize}
         \item Integral types
+        \item Blocks
         \item Structured data
-        \item Custom data
     \end{itemize}
     \item Linking
     \begin{itemize}
@@ -54,12 +54,12 @@
 \end{frame}
 
 \begin{frame}[fragile]{A Quick Example: C Code}
-\begin{lstinputlisting}[language=C]{../example0/stubs.c}
+\begin{lstinputlisting}[language=C]{../quick/stubs.c}
 \end{lstinputlisting}
 \end{frame}
 
 \begin{frame}[fragile]{A Quick Example: OCaml Code}
-\begin{lstinputlisting}[language=ML]{../example0/main.ml}
+\begin{lstinputlisting}[language=ML]{../quick/main.ml}
 \end{lstinputlisting}
 \end{frame}
 
@@ -114,14 +114,45 @@ the latter for byte code compilation.
 
 \begin{frame}{value type}
 All variables passed between OCaml and C are of type \emph{value}.  A \emph{value} can be:
+\begin{itemize} \item A integral type (unboxed) \item A pointer to a heap allocated object
+    \item An pointer to a object allocated outside of the heap
+\end{itemize}
+There are two macros to help you determine what type is encapsulated in a \emph{value}
 \begin{itemize}
-    \item A integral type
-    \item A heap allocated object
-    \item An object allocated outside of the heap
+    \item Is\_long(v) - returns true if v is an integral type
+    \item Is\_block(v) - returns true if v is a pointer to a block
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{integral types}
+\begin{frame}{integral types}
+There are a number of macros for retreiving and storing integral types.
+They are of the form \emph{Val\_type} (think "value of type") and \emph{Type\_val} (think "type of value")
+\begin{itemize}
+    \item Val\_long(l) and Long\_val(v)
+    \item Val\_int(i) and Int\_val(i)
+    \item Val\_bool(b), Val\_true, Val\_false and Bool\_val(v)
+    \item Val\_unit
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Going back to our quick example}
+Let's take another look at our quick example to see how these macros are used:
+\begin{lstinputlisting}[language=C]{../quick/stubs.c}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}{Blocks}
+If a \emph{value} is a block, then it has a tag (accessible via the \emph{Tag\_val(v)} macro) which will
+return one of the following values:
+\begin{tabular}{| l | l |} \hline
+    Tag & Description \\ \hline\hline
+    0 to No\_scan\_tag-1 & A structured block.  Each field is a \emph{value}. \\ \hline
+    Closure\_tag & A closure representing a functional value. \\ \hline
+    String\_tag & A character string. \\ \hline
+    Double\_tag & A double precision float. \\ \hline
+    Abstract\_tag & An abstract datatype. \\ \hline
+    Custom\_tag & A custom datatype. \\ \hline
+\end{tabular}
 \end{frame}
 
 \end{document}
