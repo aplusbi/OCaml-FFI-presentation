@@ -4,7 +4,7 @@
 
 \title{Interfacing C with OCaml}
 \author{Niki Yoshiuchi}
-\date{October 15, 2011}
+\date{\today}
 
 \begin{document}
 
@@ -153,6 +153,52 @@ return one of the following values:
     Abstract\_tag & An abstract datatype. \\ \hline
     Custom\_tag & A custom datatype. \\ \hline
 \end{tabular}
+\end{frame}
+
+\begin{frame}{Doubles, strings, Ints}
+Doubles, strings, Int32s, Int64s and Nativeints are all stored as pointers to heap allocated objects.
+They are accessible via a set of macros of the form \emph{Type\_val}:
+\begin{itemize}
+    \item Double\_val(v)
+    \item String\_val(v)
+    \item Int32\_val(v)
+    \item Int64\_val(v)
+    \item Nativeint\_val(v)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Allocating doubles, strings and Ints}
+In order to pass a double, string or Int32/Int64/Nativeint from C to OCaml, you must allocate an
+object on OCaml's heap.
+\begin{itemize}
+    \item caml\_alloc\_string(n) - Allocates a string of length n
+    \item caml\_copy\_string(s) - Copies the null-terminated string s
+    \item caml\_copy\_double(d)
+    \item caml\_copy\_int32(i), caml\_copy\_int64(i), caml\_copy\_nativeint(i)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Garbage Collection}
+If your C code manipulates any heap allocated objects or performs any allocations, you must
+register it with the garbage collector.  OCaml provides a number of macros:
+\begin{itemize}
+    \item CAMLparam0 to CAMLparam5 - registers 0 to 5 parameters
+    \item CAMLxparam1 to CAMLxparam5 - for registering additional parameters for functions with arity $>$ 5
+    \item CAMLlocal1 to CAMLlocal5 - for declaring local \emph{value} variables
+    \item CAMLlocalN(x, n) - for declaring an array of \emph{values} of size \emph{n}
+    \item CAMLreturn0, CAMLreturn(x) and CAMLreturnT(t, x) - these replace the \emph{return} statement
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Double example}
+\begin{lstinputlisting}[language=C]{../double/stubs.c}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}{Structured Data}
+\end{frame}
+
+\begin{frame}{Arrays of doubles}
 \end{frame}
 
 \end{document}

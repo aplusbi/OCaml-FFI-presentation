@@ -2,7 +2,8 @@
 #include <caml/memory.h>
 #include <caml/alloc.h>
 
-CAMLprim value caml_double_add(value dbl1, value dbl2)
+CAMLprim value caml_double_add(value dbl1,
+        value dbl2)
 {
     CAMLparam2(dbl1, dbl2);
     CAMLlocal1(ret);
