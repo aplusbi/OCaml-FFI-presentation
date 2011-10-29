@@ -2,6 +2,14 @@
 \usepackage{listings}
 \usetheme{default}
 
+\lstset{numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5px,
+    keywordstyle=\color{red},
+    stringstyle=\color{green},
+    commentstyle=\color{blue}}
+
 \title{Interfacing C with OCaml}
 \author{Niki Yoshiuchi}
 \date{\today}
@@ -13,6 +21,7 @@
 \end{frame}
 
 \begin{frame}{Overview}
+\begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
 \begin{itemize}
     \item Why?
     \item A Quick Example
@@ -31,6 +40,9 @@
         \item Blocks
         \item Structured data
     \end{itemize}
+\end{itemize} &
+
+\begin{itemize}
     \item Linking
     \begin{itemize}
         \item Static
@@ -41,7 +53,8 @@
         \item Exceptions
         \item Callbacks
     \end{itemize}
-\end{itemize}
+\end{itemize} \\
+\end{tabular}
 \end{frame}
 
 \begin{frame}{Why?}
@@ -132,12 +145,21 @@ There are two macros to help you determine what type is encapsulated in a \emph{
 \begin{frame}{integral types}
 There are a number of macros for retreiving and storing integral types.
 They are of the form \emph{Val\_type} (think "value of type") and \emph{Type\_val} (think "type of value")
-\begin{itemize}
-    \item Val\_long(l) and Long\_val(v)
-    \item Val\_int(i) and Int\_val(i)
-    \item Val\_bool(b), Val\_true, Val\_false and Bool\_val(v)
-    \item Val\_unit
-\end{itemize}
+\begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
+    \begin{itemize}
+        \item Val\_long(l)
+        \item Val\_int(i)
+        \item Val\_bool(b)
+        \item Val\_true
+        \item  Val\_false
+        \item Val\_unit
+    \end{itemize} &
+    \begin{itemize}
+        \item Long\_val(v)
+        \item Int\_val(i)
+        \item Bool\_val(v)
+    \end{itemize} \\
+\end{tabular}
 \end{frame}
 
 \begin{frame}[fragile]{Going back to our quick example}
@@ -195,12 +217,62 @@ register it with the garbage collector.  OCaml provides a number of macros:
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Garbage Collection}
+\begin{itemize}
+    \item CAMLparam\# and CAMLxparam\# should be the first things called in your function.  All your function's
+    parameters should be registered using them.  If you have 3 parameters, then use CAMLparam3, etc.
+    \item CAMLlocal\# and CAMLlocalN should be used to declare any local \emph{value} variables used in yoru function.
+    \item CAMLreturn should replace all the \emph{return} statements in your function.  This is required if you used
+    any of the CAMLparam or CAMLlocal functions.
+\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Double example}
 \begin{lstinputlisting}[language=C]{../double/stubs.c}
 \end{lstinputlisting}
 \end{frame}
 
 \begin{frame}{Structured Data}
+\begin{itemize}
+    \item Variants
+    \item Records and tuples
+    \item Lists
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Variants}
+\begin{itemize}
+    \item Constant constructors are represented as unboxed integers.  The value is the order in which the constructor
+    appears, starting from 0.
+    \item Non-constant constructors are represented as blocks.  The tag for each block is the order in which the
+    non-constant constructor appears, starting from 0.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=10]{Variant Example}
+\begin{lstinputlisting}[language=ML]{../variant/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile,shrink=20]{Variant example}
+\begin{lstinputlisting}[language=ML]{../variant/stubs.c}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}{Tuples and Records}
+Tuples and records are both represented by 0 tagged blocks.  Fields are accessed in numerical order using the
+\emph{Field(v, n)} macro.  \emph{Field(v, n)} returns an lvalue and can be used to both set and get the field.
+Tuples and records can be allocated using the \emph{caml\_alloc\_tuple(n)} function.
+\end{frame}
+
+\begin{frame}[fragile]{Record example}
+\begin{lstinputlisting}[language=ML]{../tuple/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Record example}
+\begin{lstinputlisting}[language=C]{../tuple/stubs.c}
+\end{lstinputlisting}
 \end{frame}
 
 \begin{frame}{Arrays of doubles}
