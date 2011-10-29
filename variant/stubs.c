@@ -3,13 +3,10 @@
 #include <caml/memory.h>
 #include <caml/alloc.h>
 
-CAMLprim value caml_variant(value t)
-{
+CAMLprim value caml_variant(value t) {
     CAMLparam1(t);
-    if(Is_block(t))
-    {
-        switch(Tag_val(t))
-        {
+    if(Is_block(t)) {
+        switch(Tag_val(t)) {
             case 0:
                 printf("Int of %d\n", Int_val(Field(t, 0)));
                 break;
@@ -27,8 +24,7 @@ CAMLprim value caml_variant(value t)
                 break;
         }
     }
-    else
-    {
+    else {
         if(Int_val(t) == 0)
             printf("Nothing\n");
         else if(Int_val(t) == 1)
