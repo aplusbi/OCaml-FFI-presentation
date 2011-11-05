@@ -1,0 +1,15 @@
+OASISFormat: 0.2
+Name:        array
+Version:     1
+Synopsis:    Example
+Authors:     Niki Yoshiuchi
+License:     Apache
+Plugins:     DevFiles (0.2)
+
+Executable main
+  Path: .
+  BuildTools: ocamlbuild
+  CompiledObject: best
+  MainIs: main.ml
+  CSources: stubs.c
+  

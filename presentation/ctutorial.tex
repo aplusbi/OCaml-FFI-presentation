@@ -237,6 +237,7 @@ register it with the garbage collector.  OCaml provides a number of macros:
     \item Variants
     \item Records and tuples
     \item Lists
+    \item Arrays
 \end{itemize}
 \end{frame}
 
@@ -276,6 +277,13 @@ Tuples and records can be allocated using the \emph{caml\_alloc\_tuple(n)} funct
 \end{frame}
 
 \begin{frame}{Lists}
+\begin{itemize}
+    \item $[]$ is a Val\_int of 0
+    \item Blocks with tag 0
+    \item Block size of 2
+    \item Field(v, 0) contains the head
+    \item Field(v, 1) contains the tail
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{List example}
@@ -288,7 +296,14 @@ Tuples and records can be allocated using the \emph{caml\_alloc\_tuple(n)} funct
 \end{lstinputlisting}
 \end{frame}
 
-\begin{frame}{Arrays of doubles}
+\begin{frame}[fragile]{Array example}
+\begin{lstinputlisting}[language=ML]{../array/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Array example}
+\begin{lstinputlisting}[language=C]{../array/stubs.c}
+\end{lstinputlisting}
 \end{frame}
 
 \end{document}
