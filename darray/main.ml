@@ -1,5 +1,5 @@
-external create_array : int -> float -> float array =
-    "caml_create_array"
+external create_array : int -> float ->
+    float array = "caml_create_array"
 external print_array : float array -> unit =
     "caml_print_array"
 

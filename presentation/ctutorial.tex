@@ -198,6 +198,7 @@ They are accessible via a set of macros of the form \emph{Type\_val}:
 In order to pass a double, string or Int32/Int64/Nativeint from C to OCaml, you must allocate an
 object on OCaml's heap.
 \begin{itemize}
+    \item caml\_alloc(n, t) - Allocates a block with tag \emph{t} and size \emph{n}
     \item caml\_alloc\_string(n) - Allocates a string of length n
     \item caml\_copy\_string(s) - Copies the null-terminated string s
     \item caml\_copy\_double(d)
@@ -296,13 +297,39 @@ Tuples and records can be allocated using the \emph{caml\_alloc\_tuple(n)} funct
 \end{lstinputlisting}
 \end{frame}
 
+\begin{frame}{Arrays}
+\begin{itemize}
+    \item Block with tag 0
+    \item Use the \emph{Wosize\_val(v)} macro to get the size of the array
+    \item Use Field(v, n) to get or set the nth element
+    \item caml\_alloc\_tuple(n) to allocate an array of size n
+    \item Double arrays
+    \begin{itemize}
+        \item Block with tag Double\_array\_tag
+        \item Use Double\_field(v, n) to get the nth element
+        \item Store\_double\_field(v, n, d) to set the nth element
+        \item caml\_alloc(n, Double\_array\_tag) to allocate an array of size n
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Array example}
 \begin{lstinputlisting}[language=ML]{../array/main.ml}
 \end{lstinputlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Array example}
+\begin{frame}[fragile,shrink=5]{Array example}
 \begin{lstinputlisting}[language=C]{../array/stubs.c}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Double array example}
+\begin{lstinputlisting}[language=ML]{../darray/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile,shrink=5]{Double array example}
+\begin{lstinputlisting}[language=C]{../darray/stubs.c}
 \end{lstinputlisting}
 \end{frame}
 
