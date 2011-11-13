@@ -239,6 +239,7 @@ register it with the garbage collector.  OCaml provides a number of macros:
     \item Records and tuples
     \item Lists
     \item Arrays
+    \item Big Arrays
 \end{itemize}
 \end{frame}
 
@@ -331,6 +332,51 @@ Tuples and records can be allocated using the \emph{caml\_alloc\_tuple(n)} funct
 \begin{frame}[fragile,shrink=5]{Double array example}
 \begin{lstinputlisting}[language=C]{../darray/stubs.c}
 \end{lstinputlisting}
+\end{frame}
+
+\begin{frame}{Bigarrays}
+\begin{itemize}
+    \item Native to C (or Fortran)
+    \item pack data efficiently
+    \item Are limited to only certain types, mainly integers, floats, chars and complex numbers
+    \item in OCaml there are three different Bigarrays:
+    \begin{itemize}
+        \item Array1 - Single dimension arrays
+        \item Array2 - Two dimensional arrays
+        \item Genarray - Multi-dimensional arrays
+    \end{itemize}
+    \item C doesn't care.  You get a void * and num\_dims and flags
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What do Bigarrays look like?}
+This is from OCaml 3.12.1:
+\begin{lstlisting}[language=C]
+struct caml_ba_array {
+  void * data;                
+  intnat num_dims;            
+  intnat flags;  
+  struct caml_ba_proxy * proxy; 
+  intnat dim[1] ;
+};
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Bigarray - types}
+\begin{itemize}
+    \item CAML\_BA\_FLOAT32 -  Single-precision floats
+    \item CAML\_BA\_FLOAT64 -  Double-precision floats
+    \item CAML\_BA\_SINT8 -  Signed 8-bit integers
+    \item CAML\_BA\_UINT8 -  Unsigned 8-bit integers
+    \item CAML\_BA\_SINT16 -  Signed 16-bit integers
+    \item CAML\_BA\_UINT16 -  Unsigned 16-bit integers
+    \item CAML\_BA\_INT32 -  Signed 32-bit integers
+    \item CAML\_BA\_INT64 -  Signed 64-bit integers
+    \item CAML\_BA\_CAML\_INT -  Caml-style integers (signed 31 or 63 bits)
+    \item CAML\_BA\_NATIVE\_INT -  Platform-native long integers (32 or 64 bits)
+    \item CAML\_BA\_COMPLEX32 -  Single-precision complex
+    \item CAML\_BA\_COMPLEX64 -  Double-precision complex
+\end{itemize}
 \end{frame}
 
 \end{document}
