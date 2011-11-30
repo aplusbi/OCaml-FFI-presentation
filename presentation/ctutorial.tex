@@ -48,6 +48,7 @@
         \item Static
         \item Dynamic
     \end{itemize}
+    \item What's left?
 \end{itemize} \\
 \end{tabular}
 \end{frame}
@@ -422,6 +423,53 @@ There are two macros - one returns the Bigarray struct, the other the data point
 \begin{frame}[fragile,shrink=5]{Bigarray example}
 \begin{lstinputlisting}[language=C]{../bigarray/stubs.c}
 \end{lstinputlisting}
+\end{frame}
+
+\begin{frame}{Linking}
+Use Oasis.
+\end{frame}
+
+\begin{frame}[fragile]{Static Linking}
+To build the C library:
+\begin{lstlisting}
+gcc -I /usr/local/lib/ocaml -c stubs.c
+ar rcs libstubs.a stubs.o
+\end{lstlisting}
+
+To link the OCaml code:
+\begin{lstlisting}
+ocamlc -o main.byte -custom libstubs.a main.cmo
+ocamlopt -o main.native libstubs.a main.cmx
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Linking}
+To build the C library:
+\begin{lstlisting}
+gcc -I /usr/local/lib/ocaml -c -fPIC
+    stubs.c -o stubs.o
+gcc -shared -Wl,-soname,libstubs.so -o libstubs.so
+\end{lstlisting}
+
+To link the OCaml code:
+\begin{lstlisting}
+ocamlc -o main.byte libstubs.so main.cmo
+ocamlopt -o main.native libstubs.so main.cmx
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{What's left?"}
+\begin{itemize}
+    \item Callbacks
+    \item Exceptions
+    \item Custom data
+    \item Non-blocking calls
+    \item C threads
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fin.}
+Thanks for coming!
 \end{frame}
 
 \end{document}

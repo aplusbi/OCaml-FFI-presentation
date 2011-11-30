@@ -8,7 +8,7 @@ dyn.byte: libstubs_so.so main.cmo
 	ocamlc -o dyn.byte libstubs_so.so main.cmo
 
 dyn.native: libstubs_so.so main.cmx
-	ocamlopt -o dyn.byte libstubs_so.so main.cmx
+	ocamlopt -o dyn.native libstubs_so.so main.cmx
 
 stubs.o: stubs.c
 	gcc -I /usr/local/lib/ocaml -c stubs.c
