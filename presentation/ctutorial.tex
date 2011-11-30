@@ -34,24 +34,19 @@
     \begin{itemize}
         \item Arity $>$ 5
     \end{itemize}
+\end{itemize} &
+
+\begin{itemize}
     \item value type
     \begin{itemize}
         \item Integral types
         \item Blocks
         \item Structured data
     \end{itemize}
-\end{itemize} &
-
-\begin{itemize}
     \item Linking
     \begin{itemize}
         \item Static
         \item Dynamic
-    \end{itemize}
-    \item Advanced features
-    \begin{itemize}
-        \item Exceptions
-        \item Callbacks
     \end{itemize}
 \end{itemize} \\
 \end{tabular}
@@ -377,6 +372,56 @@ struct caml_ba_array {
     \item CAML\_BA\_COMPLEX32 -  Single-precision complex
     \item CAML\_BA\_COMPLEX64 -  Double-precision complex
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Bigarray - layouts and flags}
+OCaml supports both row-major (C style) and column-major (Fortan style) arrays.
+This is specified by one of two flags:
+\begin{itemize}
+  \item CAML\_BA\_C\_LAYOUT
+  \item CAML\_BA\_FORTRAN\_LAYOUT
+\end{itemize}
+Bigarrays also have flags specifying how the memory is managed:
+\begin{itemize}
+  \item CAML\_BA\_EXTERNAL - Data is not allocated by Caml
+  \item CAML\_BA\_MANAGED - Data is allocated by Caml
+  \item CAML\_BA\_MAPPED\_FILE - Data is a memory mapped file
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bigarrays - allocation}
+There are two functions provided to allocate Bigarrays in C:
+\begin{itemize}
+    \item value caml\_ba\_alloc(int flags, int num\_dims, void * data, intnat * dim);
+    \begin{itemize}
+        \item flags - The type and layout ORed together
+        \item num\_dims - the number of dimensions
+        \item data - a pointer to the C array
+        \item dim - a pointer to an array containing the size of each dimension
+    \end{itemize}
+    \item value caml\_ba\_alloc\_dims(int flags, int num\_dims, void * data, ...);
+    \begin{itemize}
+        \item Pretty much the same, except it takes a va\_args list of dimensions
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bigarrays - access}
+There are two macros - one returns the Bigarray struct, the other the data pointer
+\begin{itemize}
+    \item Caml\_ba\_array\_val(v) - returns the struct
+    \item Caml\_ba\_data\_val(v) - returns the data pointer
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink=5]{Bigarray example}
+\begin{lstinputlisting}[language=ML]{../bigarray/main.ml}
+\end{lstinputlisting}
+\end{frame}
+
+\begin{frame}[fragile,shrink=5]{Bigarray example}
+\begin{lstinputlisting}[language=C]{../bigarray/stubs.c}
+\end{lstinputlisting}
 \end{frame}
 
 \end{document}
